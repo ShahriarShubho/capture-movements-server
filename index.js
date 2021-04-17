@@ -1,36 +1,75 @@
-const express = require('express')
-const cors = require('cors')
-const fileUpload = require('express-fileupload');
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectId;;
+
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+
+const port = process.env.PORT || 5000;
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bfpqs.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+client.connect((err) => {
+
+  const serviceCollection = client
+    .db(`${process.env.DB_NAME}`)
+    .collection("services");
+
+    const reviewCollection = client
+    .db(`${process.env.DB_NAME}`)
+    .collection("review");
 
 
-
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use(cors())
-app.use(express.static('services'));
-app.use(fileUpload());
-
-const port = process.env.PORT || 5000
-
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.post('/addServices', (req, res) => {
-    const file = req.files.file
-    const name = req.body.name
-    const email = req.body.email
-    const description = req.body.description
-    
-    file.mv(`${__dirname}/services/${file.name}`, err => {
-        if(err) {
-            console.log(err)
-           return res.status(400).send({massage : "filed to load"})
-        }
-        return res.status(200).send({name : file.name, path : `/${file.name}`})
+  app.post('/addServices', (req, res) => {
+    const service = req.body
+    serviceCollection.insertOne(service)
+    .then(result => {
+        res.send(result.insertedCount > 0)
     })
 })
 
-app.listen(port)
+app.post('/addReview', (req, res) => {
+  const review = req.body
+  console.log(review)
+  reviewCollection.insertOne(review)
+  .then(result => {
+    console.log(result.insertedCount, "inserted")
+    res.send(result.insertedCount > 0)
+  })
+})
+
+app.get('/bookingById/:id', (req, res) => {
+  serviceCollection.find({_id: ObjectId(req.params.id)})
+  .toArray((err, book) => {
+    res.send(book[0])
+  })
+})
+
+  app.get("/services", (req, res) => {
+    serviceCollection.find({})
+    .toArray((err, service) => {
+      res.send(service);
+    });
+  });
+
+  app.get("/reviews", (req, res) => {
+    reviewCollection.find({})
+    .toArray((err, review) => {
+      res.send(review);
+    });
+  });
+
+});
+
+app.listen(port);
