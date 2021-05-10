@@ -6,7 +6,7 @@
 
 # Capture Movements
 
-It is an Photography service website, which serves some services like **Photography, videography, Editing etc. In this website, two types of people can log in or sign up here. One is admin and another is user. anyone cannot go the dashboard page without login. After login, there are different dashboard option for user and admin. All the facilities of this website are listed here:
+It is an Photography service website, which serves some services like **Photography, videography, Editing etc**. In this website, two types of people can log in or sign up here. One is admin and another is user. anyone cannot go the dashboard page without login. After login, there are different dashboard option for user and admin. All the facilities of this website are listed here:
 
 - Users and Admin can sign up and log in to this website using google. 
 - Here are different dashboards for User and Admin
