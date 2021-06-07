@@ -23,5 +23,5 @@ It is an Photography service website, which serves some services like **Photogra
 **MongoDB, NodeJs, ExpressJs, .env**
 
 Here live site: [Capture Movements](https://capture-moments-3a53d.web.app) <br/>
-You can visit the Server site code: [Capture Movements Client Site Code](https://github.com/ShahriarShubho/capture-movements)
+You can visit the Client site code: [Capture Movements Client Site Code](https://github.com/ShahriarShubho/capture-movements)
 
